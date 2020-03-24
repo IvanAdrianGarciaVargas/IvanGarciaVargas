@@ -1,41 +1,13 @@
-TOKENS = {
-    'BOOL': 256,
-    'CALL': 257,
-    'CHAR': 258,
-    'CONST_CHAR': 259,
-    'CONST_STRING': 260,
-    'DIF': 261,
-    'DO': 262,
-    'ELSE': 263,
-    'FLOAT': 264,
-    'FOR': 265,
-    'FUNCTION': 266,
-    'ID': 267,
-    'IF': 268,
-    'IGU': 269,
-    'INT': 270,
-    'MAI': 271,
-    'MAIN': 272,
-    'MAY': 273,
-    'MEI': 274,
-    'MEN': 275,
-    'NUM': 276,
-    'NUMF': 277,
-    'READ': 278,
-    'RETURN': 279,
-    'STRING': 280,
-    'THEN': 281,
-    'TO': 282,
-    'VOID': 283,
-    'WHILE': 284,
-    'WRITE': 285,
-    'FALSE': 286,
-    'TRUE': 287,
-}
+CONSTANTES = ('BOOL', 'CALL','CHAR', 'CONST_CHAR', 'CONST_STRING', 'DIF', 'DO',
+    'ELSE', 'FLOAT', 'FOR', 'FUNCTION', 'ID', 'IF', 'IGU', 'INT', 'MAI', 'MAIN',
+    'MAY', 'MEI', 'MEN', 'NUM', 'NUMF', 'READ', 'RETURN', 'STRING', 'THEN', 'TO',
+    'VOID', 'WHILE', 'WRITE', 'FALSE', 'TRUE',)
 
 PALABRAS_RESERVADAS = ('bool', 'call', 'char', 'do', 'else', 'float', 'for',
     'function', 'if', 'int', 'main', 'read', 'return', 'string', 'then', 'to',
     'void', 'while', 'write', 'false', 'true',)
+
+TOKENS = {constante: token for (token, constante) in enumerate(CONSTANTES) }
 
 class Simbolo(object):
     def __init__(self, token=None, lexema=None):
