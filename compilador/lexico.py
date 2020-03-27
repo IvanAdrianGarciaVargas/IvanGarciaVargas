@@ -152,6 +152,28 @@ class Lexico(object):
                 self.__retrocede_indice()
                 return Simbolo(token=TOKENS['MAY'], lexema=self.__leer_lexema())
 
+            elif self.estado == 9:
+                if caracter.isalpha():
+                    self.estado = 10
+
+                else:
+                    self.estado = self.__fallo(self.inicio)
+
+            elif self.estado == 10:
+                caracter = self.__siguiente_caracter()
+                if not caracter.isalnum():
+                    self.estado = 11
+
+            elif self.estado == 11:
+                self.__retrocede_indice()
+                lexema = self.__leer_lexema()
+                simbolo = self.__buscar_simbolo(lexema=lexema)
+                if simbolo is None:
+                    simbolo = Simbolo(token=TOKENS['ID'], lexema=lexema)
+                    self.inserta_simbolo(simbolo=simbolo)
+
+                return simbolo
+
             else:
                 if caracter in SIMBOLOS_PERMITIDOS:
                     return Simbolo(token=ord(caracter), lexema=self.__leer_lexema())
@@ -170,6 +192,7 @@ class Lexico(object):
         """
         self.lexema = self.codigo[self.inicio_lexema: self.indice + 1]
         self.__avanza_inicio_lexema()
+        self.inicio = 0
         self.estado = 0
         return self.lexema
 
@@ -180,10 +203,23 @@ class Lexico(object):
         """
         self.indice -= 1
 
+    def __deshacer_automata(self):
+        """
+        Si un automata falla en un estado intermedio, regresa el indice al
+        caracter previo al inicio_lexema, para procesar el primer caracter en
+        el siguiente automata.
+        """
+        self.indice = self.inicio_lexema - 1
+
     def __fallo(self, inicio):
         """
         Regresa el valor del estado inicial del siguiente automata a probar
         cuando el automata anterior fallo.
         """
         if inicio == 0:
-            return 9
+            self.inicio = 9
+
+        elif inicio == 9:
+            self.inicio = 12
+
+        return self.inicio
