@@ -174,6 +174,85 @@ class Lexico(object):
 
                 return simbolo
 
+            elif self.estado == 12:
+                if caracter.isdigit():
+                    self.estado = 13
+
+                else:
+                    self.estado = self.__fallo(self.inicio)
+
+            elif self.estado == 13:
+                caracter = self.__siguiente_caracter()
+                if caracter == '.':
+                    self.estado = 14
+
+                elif caracter in 'Ee':
+                    self.estado = 16
+
+                elif caracter.isdigit():
+                    pass
+
+                else:
+                    self.estado = 20
+
+            elif self.estado == 14:
+                caracter = self.__siguiente_caracter()
+                if caracter.isdigit():
+                    self.estado = 15
+
+                else:
+                    self.estado = self.__fallo(self.inicio)
+
+            elif self.estado == 15:
+                caracter = self.__siguiente_caracter()
+                if caracter in 'Ee':
+                    self.estado = 16
+
+                elif caracter.isdigit():
+                    pass
+
+                else:
+                    self.estado = 21
+
+            elif self.estado == 16:
+                caracter = self.__siguiente_caracter()
+                if caracter in '+-':
+                    self.estado = 17
+
+                elif caracter.isdigit():
+                    self.estado = 18
+
+                else:
+                    self.estado = self.__fallo(self.inicio)
+
+            elif self.estado == 17:
+                caracter = self.__siguiente_caracter()
+                if caracter.isdigit():
+                    self.estado = 18
+
+                else:
+                    self.estado = self.__fallo(self.inicio)
+
+            elif self.estado == 18:
+                caracter = self.__siguiente_caracter()
+                if caracter.isdigit():
+                    pass
+
+                else:
+                    self.estado = 19
+
+            elif self.estado == 19:
+                self.__retrocede_indice()
+                return Simbolo(token=TOKENS['NUMF'], lexema=self.__leer_lexema())
+
+            elif self.estado == 20:
+                self.__retrocede_indice()
+                return Simbolo(token=TOKENS['NUM'], lexema=self.__leer_lexema())
+
+            elif self.estado == 21:
+                self.__retrocede_indice()
+                return Simbolo(token=TOKENS['NUMF'], lexema=self.__leer_lexema())
+
             else:
                 if caracter in SIMBOLOS_PERMITIDOS:
                     return Simbolo(token=ord(caracter), lexema=self.__leer_lexema())
@@ -221,5 +300,8 @@ class Lexico(object):
 
         elif inicio == 9:
             self.inicio = 12
+
+        elif inicio == 12:
+            self.inicio = 22
 
         return self.inicio
