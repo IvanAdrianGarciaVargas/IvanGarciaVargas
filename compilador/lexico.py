@@ -253,6 +253,137 @@ class Lexico(object):
                 self.__retrocede_indice()
                 return Simbolo(token=TOKENS['NUMF'], lexema=self.__leer_lexema())
 
+
+
+
+            """ Constantes de cadena del 22 al 25 """
+
+
+            elif expression:
+                pass self.estado == 22:
+                if caracter=='"':
+                    self.estado = 23
+                else: 
+                    self.estado=self.__fallo(self.inicio)
+            
+            elif self.estado == 23:
+                caracter=self.__siguiente_caracter()
+                if caracter == '\\':
+                    self.estado = 24
+                elif caracter == '"':
+                    self.estado = 25
+                else:
+                    pass
+            elif self.estado == 24:
+                caracter=self.__siguiente_caracter()
+                if caracter in r'atrn\"':
+                    self.estado=23
+                else:
+                    self.estado=self.__fallo(self.inicio)
+            
+            elif self.estado == 25:
+                return Simbolo(token=TOKENS['CONST_STRING'],lexema=self.__leer_lexema())
+
+
+                """ Constantes de caracter del 26 al 30 """
+            
+            elif self.estado == 26:
+                if caracter == "'":
+                    self.estado=27
+                else:
+                    self.estado=self.__fallo(self.inicio)
+
+            elif self.estado == 27:
+                caracter=self.__siguiente_caracter()
+                if caracter =='\\':
+                    self.estado=28
+                else:
+                    self.estado=29
+            
+            elif self.estado == 28:
+                caracter=self.__siguiente_caracter()
+                if caracter in r"atrn\'":
+                    self.estado=29
+                else:
+                    self.estado=self.__fallo(self.inicio)
+
+            elif self.estado == 29:
+                caracter=self.__siguiente_caracter()
+                if caracter == "'":
+                    self.estado=30
+                else:
+                    self.estado=self.__fallo(self.inicio)
+
+            elif self.estado == 30:
+                return Simbolo(token=TOKENS['CONST_CHAR'], lexema=self.__leer_lexema())
+
+                """ Comentario simple del 31 al 34 """
+
+            elif self.estado == 31:
+                if caracter == '/':
+                    self.estado = 32
+                else:
+                    self.estado=self.__fallo(self.inicio)
+            
+            elif self.estado == 32:
+                caracter=self.__siguiente_caracter()
+                if caracter == '/':
+                    self.estado = 33
+                else:
+                    self.estado=35
+            
+            elif self.estado == 33:
+                caracter=self.__siguiente_caracter()
+                if caracter == '\n':
+                    self.estado=34
+                else:
+                    pass
+            
+            elif self.estado == 34:
+                self.__retrocede_indice()
+                self.__leer_lexema()
+
+                """ Comentario Multilineas del 35 al 39 """
+
+            elif self.estado == 35:
+                if caracter == '*':
+                    self.estado = 36
+                else:
+                    self.estado=self.__fallo(self.inicio)
+
+
+            
+            elif self.estado == 36:
+                caracter=self.__siguiente_caracter()
+                if caracter =='*':
+                    self.estado=37
+
+
+
+                else:
+                    pass
+            
+            elif self.estado == 37:
+                caracter=self.__siguiente_caracter()
+                if caracter == '/':
+                    self.estado=38
+                else:
+                    self.estado=36
+
+
+
+            elif self.estado == 38:
+              self.__leer_lexema()
+
+            """  elif self.estado == 39:
+                  self.__leer_lexema() """
+
+
+
+
+
+
+
             else:
                 if caracter in SIMBOLOS_PERMITIDOS:
                     return Simbolo(token=ord(caracter), lexema=self.__leer_lexema())
@@ -294,7 +425,11 @@ class Lexico(object):
         """
         Regresa el valor del estado inicial del siguiente automata a probar
         cuando el automata anterior fallo.
+
         """
+
+
+        
         if inicio == 0:
             self.inicio = 9
 
@@ -304,4 +439,13 @@ class Lexico(object):
         elif inicio == 12:
             self.inicio = 22
 
+        elif inicio == 22:
+            self.inicio = 26
+        
+        elif inicio == 26:
+            self.inicio = 31
+
+        elif inicio == 31:
+            self.inicio = 39
         return self.inicio
+
